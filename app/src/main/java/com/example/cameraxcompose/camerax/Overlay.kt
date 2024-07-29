@@ -22,17 +22,20 @@ fun Overlay(
     onGloballyPositioned: (topLeft: Offset, bottomRight: Offset) -> Unit
 ) {
     Canvas(modifier = Modifier.fillMaxSize()) {
-        val rectWidth = size.width * 0.95f
-        val rectHeight = rectWidth / 1.57f
 
-//        val rectLeft = size.center.x - rectWidth / 2f
-//        val rectTop = size.center.y - (rectHeight / 2f) - verticalOffset
-//        val rectRight = rectLeft + rectWidth
-//        val rectBottom = rectTop + rectHeight
+//        val rectWidth = size.width * 0.95f
+        val rectWidth = size.width * 0.85f
+//        val rectHeight = rectWidth / 1.57f
+
+        val rectHeight = rectWidth / 1.57f
         val rectLeft = size.center.x - rectWidth / 2f
-        val rectTop = 0f
+        val rectTop = size.center.y - (rectHeight / 2f) - verticalOffset
         val rectRight = rectLeft + rectWidth
         val rectBottom = rectTop + rectHeight
+//        val rectLeft = size.center.x - rectWidth / 2f
+//        val rectTop = 2*rectHeight-rectWidth
+//        val rectRight = rectLeft + rectWidth
+//        val rectBottom = rectTop + rectHeight
 
         val rectPath = Path().apply {
             addRect(Rect(rectLeft, rectTop, rectRight, rectBottom))
@@ -65,6 +68,8 @@ fun Overlay(
             }
         }
 
+
         onGloballyPositioned(Offset(rectLeft, rectTop), Offset(rectRight, rectBottom))
     }
+
 }

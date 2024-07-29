@@ -1,0 +1,74 @@
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import com.example.cameraxcompose.camerax.CameraX
+import com.truid.android.ui.carddetection.components.Overlay
+
+@Composable
+fun CameraCompose(
+    context: Context,
+    cameraX: CameraX,
+    onCaptureClick: () -> Unit,
+) {
+    var hasCamPermission by remember {
+        mutableStateOf(
+            REQUIRED_PERMISSIONS.all {
+                ContextCompat.checkSelfPermission(context, it) ==
+                        PackageManager.PERMISSION_GRANTED
+            })
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { granted ->
+            hasCamPermission = granted.size == REQUIRED_PERMISSIONS.size && granted.all { it.value }
+        }
+    )
+
+    LaunchedEffect(key1 = true) {
+        launcher.launch(
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        )
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (hasCamPermission) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { cameraX.startCameraPreviewView() }
+            )
+        }
+
+        Overlay(
+            verticalOffset = 0,
+            indicatorColor = Color.Green,
+            onGloballyPositioned = { topLeft, bottomRight ->
+                Log.d("Check", "CameraCompose: working")
+            }
+        )
+
+        Button(
+            onClick = onCaptureClick,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        ) {
+            Text(text = "Capture")
+        }
+    }
+}
