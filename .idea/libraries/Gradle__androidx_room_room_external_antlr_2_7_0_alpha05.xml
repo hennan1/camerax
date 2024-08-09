@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.room:room-external-antlr:2.7.0-alpha05" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="androidx.room" artifactId="room-external-antlr" version="2.7.0-alpha05" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.room/room-external-antlr/2.7.0-alpha05/1e52318fb0f0144c4131358d81dfdbda304c5aee/room-external-antlr-2.7.0-alpha05.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.room/room-external-antlr/2.7.0-alpha05/3457d45edad4dcf676c197a7c333ca989df23b17/room-external-antlr-2.7.0-alpha05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
