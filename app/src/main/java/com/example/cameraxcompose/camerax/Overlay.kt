@@ -1,5 +1,6 @@
 package com.truid.android.ui.carddetection.components
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ fun Overlay(
     Canvas(modifier = Modifier.fillMaxSize()) {
 
 //        val rectWidth = size.width * 0.95f
-        val rectWidth = size.width * 0.85f
+        val rectWidth = size.width * 1f
 //        val rectHeight = rectWidth / 1.57f
 
         val rectHeight = rectWidth / 1.57f
@@ -32,6 +33,8 @@ fun Overlay(
         val rectTop = size.center.y - (rectHeight / 2f) - verticalOffset
         val rectRight = rectLeft + rectWidth
         val rectBottom = rectTop + rectHeight
+        Log.d("Coordinates", "Overlay: width $rectWidth $rectHeight,$rectLeft,$rectTop,$rectRight,$rectBottom")
+
 //        val rectLeft = size.center.x - rectWidth / 2f
 //        val rectTop = 2*rectHeight-rectWidth
 //        val rectRight = rectLeft + rectWidth

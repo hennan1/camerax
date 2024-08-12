@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -26,6 +27,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import java.nio.ByteBuffer
 import android.os.Build.MODEL
 import android.os.Build.BRAND
@@ -33,6 +36,17 @@ import android.os.Build.MANUFACTURER
 import android.util.Log
 import android.view.Surface
 import android.view.Surface.ROTATION_90
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.unit.dp
+import androidx.room.jarjarred.org.stringtemplate.v4.Interpreter
+import java.io.FileInputStream
+import java.io.IOException
+import java.nio.channels.FileChannel
+//import org.tensorflow.lite.Interpreter
+import java.nio.MappedByteBuffer
+//import java.nio.channels.FileChannel
+//import java.io.FileInputStream
 
 class CameraX(
     private var context: Context,
@@ -145,19 +159,34 @@ class CameraX(
         val imageCapture = imageCapture ?: return@launch
 
 
+
         imageCapture.takePicture(ContextCompat.getMainExecutor(context), object :
             ImageCapture.OnImageCapturedCallback(), ImageCapture.OnImageSavedCallback {
             override fun onCaptureSuccess(image: ImageProxy) {
                 super.onCaptureSuccess(image)
                 owner.lifecycleScope.launch {
                     saveMediaToStorage(
-                        imageProxyToBitmap(image),
+                        cropCard(imageProxyToBitmap(image), Offset(x = 0f,y = 720f), Offset(x= 500f,y = 920f ))
+//                        cropCard(imageProxyToBitmap(image),300,3005
+                        ,
                         System.currentTimeMillis().toString()
                     )
                 }
                 image.close()
             }
 
+            private fun cropCard(bitmap:Bitmap, start: Offset, end:Offset):Bitmap
+                {
+        var rect = Rect(start,end)
+//        Log.d("opticalFlow", "height: ${rect.height} width: ${rect.width} bitmapheight: ${bitmap.height}")
+//        var rotatedBitmap= rotateBitmap(bitmap,90f)
+        var cardBitmap= Bitmap.createBitmap(bitmap,(start.x).toInt(),(start.y).toInt(),rect.width.toInt(),rect.height.toInt())
+
+        return cardBitmap
+    }
+            fun cropBitmap(source: Bitmap, x: Int, y: Int, width: Int, height: Int): Bitmap {
+                return Bitmap.createBitmap(source, x, y, width, height)
+            }
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 showLog("onCaptureSuccess: Uri  ${outputFileResults.savedUri}")
             }
@@ -170,6 +199,7 @@ class CameraX(
 
 
     }
+
 
     private suspend fun imageProxyToBitmap(image: ImageProxy): Bitmap =
         withContext(owner.lifecycleScope.coroutineContext) {
@@ -204,6 +234,28 @@ class CameraX(
             first.uppercaseChar() + s.substring(1)
         }
     }
+//    private fun loadModelFile(assetManager: AssetManager, modelFileName: String): Interpreter {
+//        // The path to the TFLite model file in the "assets" directory
+//        val modelFilePath = "$modelFileName" // Replace with your actual path
+//
+//        try {
+//            // Open the model file using AssetManager
+//            val fileDescriptor = assetManager.openFd(modelFilePath)
+//            val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+//            val fileChannel = inputStream.channel
+//
+//            // Create a read-only memory-mapped buffer to load the model
+//            val startOffset = fileDescriptor.startOffset
+//            val declaredLength = fileDescriptor.declaredLength
+//            val modelByteBuffer =
+//                fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
+//
+//            // Create and return an Interpreter instance with the loaded model
+//            return Interpreter(modelByteBuffer)
+//        } catch (e: IOException) {
+//            throw RuntimeException("Error loading TFLite model: $e")
+//        }
+//    }
 
     private suspend fun saveMediaToStorage(bitmap: Bitmap, name: String) {
         withContext(IO) {
