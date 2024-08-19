@@ -166,24 +166,22 @@ class CameraX(
                 super.onCaptureSuccess(image)
                 owner.lifecycleScope.launch {
                     saveMediaToStorage(
-                        cropCard(imageProxyToBitmap(image), Offset(x = 0f,y = 720f), Offset(x= 500f,y = 920f ))
-//                        cropCard(imageProxyToBitmap(image),300,3005
-                        ,
+                        imageProxyToBitmap(image),
                         System.currentTimeMillis().toString()
                     )
                 }
                 image.close()
             }
 
-            private fun cropCard(bitmap:Bitmap, start: Offset, end:Offset):Bitmap
-                {
-        var rect = Rect(start,end)
-//        Log.d("opticalFlow", "height: ${rect.height} width: ${rect.width} bitmapheight: ${bitmap.height}")
-//        var rotatedBitmap= rotateBitmap(bitmap,90f)
-        var cardBitmap= Bitmap.createBitmap(bitmap,(start.x).toInt(),(start.y).toInt(),rect.width.toInt(),rect.height.toInt())
-
-        return cardBitmap
-    }
+//            private fun cropCard(bitmap:Bitmap, start: Offset, end:Offset):Bitmap
+//                {
+//        var rect = Rect(start,end)
+////        Log.d("opticalFlow", "height: ${rect.height} width: ${rect.width} bitmapheight: ${bitmap.height}")
+////        var rotatedBitmap= rotateBitmap(bitmap,90f)
+//        var cardBitmap= Bitmap.createBitmap(bitmap,(start.x).toInt(),(start.y).toInt(),rect.width.toInt(),rect.height.toInt())
+//
+//        return cardBitmap
+//    }
             fun cropBitmap(source: Bitmap, x: Int, y: Int, width: Int, height: Int): Bitmap {
                 return Bitmap.createBitmap(source, x, y, width, height)
             }
