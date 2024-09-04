@@ -103,13 +103,13 @@ fun CameraCompose(
             )
         }
 
-        Overlay(
-            verticalOffset = 0,
-            indicatorColor = Color.Green,
-            onGloballyPositioned = { topLeft, bottomRight ->
-                Log.d("Check", "CameraCompose: working")
-            }
-        )
+//        Overlay(
+//            verticalOffset = 0,
+//            indicatorColor = Color.Green,
+//            onGloballyPositioned = { topLeft, bottomRight ->
+//                Log.d("Check", "CameraCompose: working")
+//            }
+//        )
 
         Column(
             modifier = Modifier
